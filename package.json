@@ -28,6 +28,10 @@
   },
   "homepage": "https://github.com/Mstiekema/LurkerLogs#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
     "tmi.js": "^1.3.0"
   }
 }
