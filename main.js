@@ -1,10 +1,14 @@
 // Default variables
 var options = require("./config.js");
+var db = require("./database.js");
 var web = require("./web.js");
 var tmi = require("tmi.js");
 
-var bot = new tmi.client(options);
+var bot = new tmi.client(options.twitch);
 var channels = ["#lurkerlogs", "#merijn"]; // Test channels, pull all channels from database in future commit
+
+// Start website
+web.listen(3030, function() { console.log("LurkerLogs website is now online!"); });
 
 // Connect the bot to Twitch
 bot.connect().then(function(data) {
@@ -15,19 +19,23 @@ bot.connect().then(function(data) {
   }
 }).catch(function(err) { console.log(err); });
 
+// Detect chat message
 bot.on("chat", function (channel, userInfo, message, self) {
   if (self) return; // Ignore own messages sent
-  // Create log message on new chat
+  var isMod;
+  
+  // Set mod to true if the user is a mod or the broadcaster
+  if (userInfo["mod"] || (userInfo["badges"] && userInfo["badges"]["broadcaster"])) {isMod = true} else {isMod = false}  
+  
+  // Create log message on new message sent
   var logMessage = {
-    message: message,
-    user: userInfo["user-id"],
-    streamer: userInfo["room-id"],
-    sentAt: userInfo["tmi-sent-ts"],
-    sub: userInfo["subscriber"],
-    mod: userInfo["mod"]
+    userId: userInfo["user-id"],
+    streamerId: userInfo["room-id"],
+    log: message, // Emoji's aren't yet parsed, so they show up as question marks
+    isSub: userInfo["subscriber"],
+    isMod: isMod
   }
-  console.log(logMessage);
+  
+  // Add message to the database
+  db.query("INSERT INTO chatlogs SET ?", logMessage, function (err, result) { if (err) { console.log(err); } });
 });
-
-// Start website
-web.listen(3030, function() { console.log("LurkerLogs website is now online!"); });
