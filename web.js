@@ -21,3 +21,13 @@ app.get("/streamer/:channel", function (req, res) {
 		res.render("channelLogs.html", {logs: result});
 	});
 });
+
+app.get("/user/:channel", function (req, res) {
+	db.query("SELECT * FROM chatlogs WHERE userId = ?", req.params.channel, function (err, result) {
+		var channels = new Array();
+		for (var i = 0; i < result.length; i++) {
+			if (channels.indexOf(result[i].streamerId) == -1) { channels.push(result[i].streamerId) }
+		}
+		res.render("userLogs.html", {logs: result, channels: channels});
+	});
+});
