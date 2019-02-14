@@ -1,5 +1,6 @@
 // Default variables
 var options = require("./config.js");
+var req = require("./requests.js");
 var db = require("./database.js");
 var web = require("./web.js");
 var tmi = require("tmi.js");
@@ -9,6 +10,9 @@ var channels = ["#lurkerlogs", "#merijn"]; // Test channels, pull all channels f
 
 // Start website
 web.listen(3030, function() { console.log("LurkerLogs website is now online!"); });
+
+// [TEST] Get the sub badges from given channel (Merijn in this case)
+req.getSubBadge("51068984", function (err, res) { console.log(res); });
 
 // Connect the bot to Twitch
 bot.connect().then(function(data) {
@@ -23,10 +27,10 @@ bot.connect().then(function(data) {
 bot.on("chat", function (channel, userInfo, message, self) {
   if (self) return; // Ignore own messages sent
   var isMod;
-  
+
   // Set mod to true if the user is a mod or the broadcaster
-  if (userInfo["mod"] || (userInfo["badges"] && userInfo["badges"]["broadcaster"])) {isMod = true} else {isMod = false}  
-  
+  if (userInfo["mod"] || (userInfo["badges"] && userInfo["badges"]["broadcaster"])) {isMod = true} else {isMod = false}
+
   // Create log message on new message sent
   var logMessage = {
     userId: userInfo["user-id"],
@@ -35,7 +39,7 @@ bot.on("chat", function (channel, userInfo, message, self) {
     isSub: userInfo["subscriber"],
     isMod: isMod
   }
-  
+
   // Add message to the database
   db.query("INSERT INTO chatlogs SET ?", logMessage, function (err, result) { if (err) { console.log(err); } });
 });

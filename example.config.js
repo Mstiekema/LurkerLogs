@@ -12,6 +12,10 @@ module.exports = {
       password: "oauth:123xxx" // Get this over at https://twitchapps.com/tmi/ 
     }
   },
+  twitchApi: {
+    clientId: "",
+    secret: ""
+  },
   mysql: {
     ip: "localhost",
     user: "user",
