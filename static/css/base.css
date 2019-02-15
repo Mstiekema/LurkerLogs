@@ -1,9 +1,9 @@
-/* https://coolors.co/f7717d-f3d9dc-978897-494850-744253 */
+/* https://coolors.co/6441a4-574ae2-222a68-2c2f33-ab81cd */
 
 html {
   font-family: 'Montserrat', sans-serif;
-  color: #494850;
-  background-color: #f3d9dc;
+  color: #ffffff;
+  background-color: #2C2F33;
 }
 
 body {
@@ -15,9 +15,10 @@ nav {
   justify-content: flex-end;
   height: inherit;
   line-height: 60px;
-  background-color: #744253;
+  background-color: #6441a4;
   padding: 0 20px 0 20px;
-  color: #f7717d;
+  color: #ffffff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 nav > section {
@@ -28,18 +29,18 @@ nav > section > a {
   padding-right: 10px;
 }
 
-main {
-  margin: 10px;
-  overflow-wrap: break-word;
-}
-
-.menuItem {
+a {
   text-decoration: none;
   color: inherit;
 }
 
-.menuItem:hover {
-  color: #c7424e;
+a:hover {
+  color: #b5b5b5;
+}
+
+main {
+  margin: 10px;
+  overflow-wrap: break-word;
 }
 
 .active {
@@ -58,4 +59,20 @@ main {
 .center {
   text-align: center;
   margin: 0 auto;
+}
+
+#userHeader {
+  display: flex;
+}
+
+#userHeader > section {
+  margin: 20px;
+  padding: 10px;
+  margin-right: 50px;
+  background-color: #6441a4;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#userHeaderInfo {
+  text-align: center;
 }

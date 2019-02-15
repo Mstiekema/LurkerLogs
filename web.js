@@ -25,17 +25,23 @@ app.get("/streamer/:channel", function (req, res) {
 
 app.get("/user/:channel", function (req, res) {
 	db.query("SELECT * FROM chatlogs WHERE userId = ?", req.params.channel, function (err, result) {
-		var channels = new Array();
-		for (var i = 0; i < result.length; i++) {
-			if (checkIfContains(channels, "id", result[i].streamerId) == -1) {
-				// Name doesn't work because you can't return from a callback. Also can't push from within the callback. Will have to look into this in the future
-				channels.push({
-					// name: rq.getUserInfo(result[i].streamerId, function(err, res) { return res["display_name"] }),
-					id: result[i].streamerId});
-			}
+		if (result && result[0]) {
+			rq.getUserInfo(result[0].userId, function(err, rslt) {
+				var channels = new Array();
+				for (var i = 0; i < result.length; i++) {
+					if (checkIfContains(channels, "id", result[i].streamerId) == -1) {
+						// Name doesn't work because you can't return from a callback. Also can't push from within the callback. Will have to look into this in the future
+						channels.push({
+							// name: rq.getUserInfo(result[i].streamerId, function(err, res) { return res["display_name"] }),
+							id: result[i].streamerId});
+					}
+				}
+				res.render("user.html", {logs: result, channels: channels, user: rslt});
+				return
+			});
+		} else {
+			res.render("user.html", {logs: [], channels: [], user: []});
 		}
-		console.log(channels)
-		res.render("userLogs.html", {logs: result, channels: channels});
 	});
 });
 
