@@ -1,0 +1,61 @@
+/* https://coolors.co/f7717d-f3d9dc-978897-494850-744253 */
+
+html {
+  font-family: 'Montserrat', sans-serif;
+  color: #494850;
+  background-color: #f3d9dc;
+}
+
+body {
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  justify-content: flex-end;
+  height: inherit;
+  line-height: 60px;
+  background-color: #744253;
+  padding: 0 20px 0 20px;
+  color: #f7717d;
+}
+
+nav > section {
+  width: 33%;
+}
+
+nav > section > a {
+  padding-right: 10px;
+}
+
+main {
+  margin: 10px;
+  overflow-wrap: break-word;
+}
+
+.menuItem {
+  text-decoration: none;
+  color: inherit;
+}
+
+.menuItem:hover {
+  color: #c7424e;
+}
+
+.active {
+  color: #d5497c;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+  margin: 0 auto;
+}

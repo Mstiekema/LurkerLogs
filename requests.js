@@ -8,6 +8,13 @@ exports.getSubBadge = function(userId, finished) {
   });
 }
 
+// Request the information of a Twitch user
+exports.getUserInfo = function(userId, finished) {
+  Request("GET", "https://api.twitch.tv/kraken/users/"+userId, function(e, b) {
+    finished(e, b);
+  });
+}
+
 // Default request
 function Request(type, url, finished) {
   req({method: type, headers: {'content-type': 'application/json', 'Accept': 'application/vnd.twitchtv.v5+json', 'Client-ID': conf.twitchApi.clientId}, url: url}, function (error, response, body) {
