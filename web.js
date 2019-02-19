@@ -23,7 +23,14 @@ app.get("/streamer/:channel", function (req, res) {
 	});
 });
 
+app.get("/logs/:channel/:user", function (req, res) {
+	db.query("SELECT * FROM chatlogs WHERE streamerId = '" + req.params.channel + "' AND userId = '" + req.params.user + "'", function (err, result) {
+		res.render("channelLogs.html", {logs: result});
+	});
+});
+
 app.get("/user/:channel", function (req, res) {
+	// Improve this query so it only displays a maximum of 5 logs.
 	db.query("SELECT * FROM chatlogs WHERE userId = ?", req.params.channel, function (err, result) {
 		if (result && result[0]) {
 			rq.getUserInfo(result[0].userId, function(err, rslt) {
