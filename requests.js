@@ -16,16 +16,36 @@ exports.getUserInfo = function(userId, finished) {
 }
 
 // Request usernames of array with streamers
-exports.getStreamerNames = function(userIds, finished) {
-  var channels = userIds.join("&id=");
-  Request("GET", "https://api.twitch.tv/helix/users?id="+channels, function(e, d) {
-    var res = new Array();
-    for (var i = 0; i < d.data.length; i++) {
-      res.push({id: d.data[i]["id"], username: d.data[i]["display_name"]})
-    }
-    console.log(res)
-    finished(e, res);
+exports.getChannelNames = function(data, attr, finished) {
+  getIdArray(data, attr, function(userIds) {
+    var channels = userIds.join("&id=");
+    Request("GET", "https://api.twitch.tv/helix/users?id="+channels, function(e, d) {
+      var res = new Array();
+      for (var i = 0; i < d.data.length; i++) {
+        res.push({userId: d.data[i]["id"], username: d.data[i]["display_name"]})
+      }
+      finished(e, res);
+    });
   });
+}
+
+// Create array of IDs
+function getIdArray(data, attr, finished) {
+  var channels = new Array();
+  for (var i = 0; i < data.length; i++) {
+    if (checkIfContains(channels, data[i][attr]) == -1) { channels.push(data[i][attr]); }
+  }
+  finished(channels)
+}
+
+// Check if array contains certain value
+function checkIfContains(array, value) {
+  for(var i = 0; i < array.length; i += 1) {
+    if(array[i] === value) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 // Default request

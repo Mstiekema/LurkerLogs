@@ -17,15 +17,23 @@ app.get("/", function (req, res) {
 	res.render("index.html");
 });
 
-app.get("/streamer/:channel", function (req, res) {
+app.get("/logs/:channel", function (req, res) {
 	db.query("SELECT * FROM chatlogs WHERE streamerId = ?", req.params.channel, function (err, result) {
-		res.render("channelLogs.html", {logs: result});
+		rq.getChannelNames(result, "userId", function(err, channels) {
+			mergeArrays(result, channels, "userId", function(rslt) {
+				res.render("logs.html", {logs: result, channels: channels});
+			});
+		});
 	});
 });
 
 app.get("/logs/:channel/:user", function (req, res) {
 	db.query("SELECT * FROM chatlogs WHERE streamerId = '" + req.params.channel + "' AND userId = '" + req.params.user + "'", function (err, result) {
-		res.render("channelLogs.html", {logs: result});
+		rq.getChannelNames(result, "userId", function(err, channels) {
+			mergeArrays(result, channels, "userId", function(rslt) {
+				res.render("logs.html", {logs: result, channels: channels});
+			});
+		});
 	});
 });
 
@@ -34,11 +42,7 @@ app.get("/user/:channel", function (req, res) {
 	db.query("SELECT * FROM chatlogs WHERE userId = ?", req.params.channel, function (err, result) {
 		if (result && result[0]) {
 			rq.getUserInfo(result[0].userId, function(err, rslt) {
-				var channels = new Array();
-				for (var i = 0; i < result.length; i++) {
-					if (checkIfContains(channels, "id", result[i].streamerId) == -1) { channels.push(result[i].streamerId); }
-				}
-				rq.getStreamerNames	(channels, function(err, channels) {
+				rq.getChannelNames(result, "streamerId", function(err, channels) {
 					res.render("user.html", {logs: result, channels: channels, user: rslt});
 				});
 			});
@@ -48,11 +52,13 @@ app.get("/user/:channel", function (req, res) {
 	});
 });
 
-function checkIfContains(array, attr, value) {
-  for(var i = 0; i < array.length; i += 1) {
-    if(array[i][attr] === value) {
-      return i;
-    }
-  }
-  return -1;
+function mergeArrays(arr1, arr2, attr, finished) {
+	for (var i in arr1) {
+		for (var e in arr2) {
+			if (arr1[i][attr] == arr2[e][attr]) {
+				Object.assign(arr1[i], arr2[e]);
+			}
+		}
+	}
+	finished(arr1);
 }

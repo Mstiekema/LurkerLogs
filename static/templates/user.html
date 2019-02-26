@@ -28,15 +28,15 @@
       <h1><%= channels[c].username %></h1>
       <p>
         <% for (var e in logs) { %>
-          <% if (logs[e].streamerId == channels[c].id) { %>
-            <% if (logs[e].isMod && channels[c].username == user['display_name']) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1" alt="Icon for Twitch subscriber">
+          <% if (logs[e].streamerId == channels[c].userId) { %>
+            <% if (logs[e].isMod && channels[c].username == user['display_name']) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1" alt="Icon for Twitch broadcaster">
             <% } else if (logs[e].isMod) { %> <img src="https://static-cdn.jtvnw.net/chat-badges/mod.png" alt="Icon for Twitch subscriber"> <% } %>
             <% if (logs[e].isSub) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-8513-2ff4adfae661/1" alt="Icon for Twitch moderator"> <% } %>
             <i class="fa fa-clock-o" title="<%= logs[e].date %>"></i> | <%= user['display_name'] %>: <%= logs[e].log %> <br>
           <% } %>
         <% } %>
       </p>
-      <p><a href="/logs/<%= channels[c].id %>/<%= logs[e].userId %>">Check full streamer logs</a></p>
+      <p><a href="/logs/<%= channels[c].userId %>/<%= logs[e].userId %>">Check full streamer logs</a></p>
     </article>
     <hr>
   <% } %>

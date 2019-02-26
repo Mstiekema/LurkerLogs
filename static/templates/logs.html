@@ -1,0 +1,13 @@
+<% include header.ejs %>
+  <% if (logs[0]) { %>
+    <h1><%= logs[0].streamerId %></h1>
+    <% for (var e in logs) { %>
+      <% if (logs[e].isMod && logs[e].streamerId == logs[e].userId) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1" alt="Icon for Twitch broadcaster">
+      <% } else if (logs[e].isMod) { %> <img src="https://static-cdn.jtvnw.net/chat-badges/mod.png" alt="Icon for Twitch subscriber"> <% } %>
+      <% if (logs[e].isSub) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-8513-2ff4adfae661/1" alt="Icon for Twitch moderator"> <% } %>
+      <i class="fa fa-clock-o" title="<%= logs[e].date %>"></i> | <%= logs[e].username %>: <%= logs[e].log %> <br>
+    <% } %>
+  <% } else { %>
+    <h1>This user / streamer has no chat history recorded</h1>
+  <% } %>
+<% include footer.ejs %>
