@@ -36,15 +36,11 @@ app.get("/user/:channel", function (req, res) {
 			rq.getUserInfo(result[0].userId, function(err, rslt) {
 				var channels = new Array();
 				for (var i = 0; i < result.length; i++) {
-					if (checkIfContains(channels, "id", result[i].streamerId) == -1) {
-						// Name doesn't work because you can't return from a callback. Also can't push from within the callback. Will have to look into this in the future
-						channels.push({
-							// name: rq.getUserInfo(result[i].streamerId, function(err, res) { return res["display_name"] }),
-							id: result[i].streamerId});
-					}
+					if (checkIfContains(channels, "id", result[i].streamerId) == -1) { channels.push(result[i].streamerId); }
 				}
-				res.render("user.html", {logs: result, channels: channels, user: rslt});
-				return
+				rq.getStreamerNames	(channels, function(err, channels) {
+					res.render("user.html", {logs: result, channels: channels, user: rslt});
+				});
 			});
 		} else {
 			res.render("user.html", {logs: [], channels: [], user: []});
