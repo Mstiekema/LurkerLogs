@@ -38,9 +38,8 @@ app.get("/logs/:channel/:user", function (req, res) {
 });
 
 app.get("/user/:channel", function (req, res) {
-	// Improve this query so it only displays a maximum of 5 logs.
-	db.query("SELECT * FROM chatlogs WHERE userId = ? OR displayName = ?", [req.params.channel, req.params.channel], function (err, result) {
-		console.log(err)
+	db.query(`SET @rank = 0, @current = NULL`, null); // Set these variables so the next query works
+	db.query(`SELECT userId, streamerId, date, log, displayName, isSub, isMod FROM (SELECT userId, streamerId, date, log, displayName, isSub, isMod, @rank := IF(@current = streamerId, @rank + 1, 1) AS rank, (@current := streamerId) FROM chatlogs WHERE displayName = '`+ req.params.channel + `' OR userId = '`+ req.params.channel + `' ORDER BY streamerId, date DESC) ranked WHERE rank <= 10`, function (err, result) {
 		if (result && result[0]) {
 			rq.getUserInfo(result[0].userId, function(err, rslt) {
 				rq.getChannelNames(result, "streamerId", function(err, channels) {

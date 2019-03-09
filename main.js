@@ -31,11 +31,16 @@ bot.on("chat", function (channel, userInfo, message, self) {
   // Set mod to true if the user is a mod or the broadcaster
   if (userInfo["mod"] || (userInfo["badges"] && userInfo["badges"]["broadcaster"])) {isMod = true} else {isMod = false}
 
+  // Parse the time the message was sent
+  var time = new Date(0)
+  time.setUTCMilliseconds(userInfo["tmi-sent-ts"]);
+
   // Create log message on new message sent
   var logMessage = {
     userId: userInfo["user-id"],
-    username: userInfo["display-name"], // We can track if the user changes their username by recording the current display name
+    displayName: userInfo["display-name"], // We can track if the user changes their username by recording the current display name
     streamerId: userInfo["room-id"],
+    date: time,
     log: message, // Emoji's aren't yet parsed, so they show up as question marks
     isSub: userInfo["subscriber"],
     isMod: isMod
