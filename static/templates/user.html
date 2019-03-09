@@ -17,8 +17,8 @@
     <section>
       <h2>Actions</h2>
       <p>
-        <a href="/streamer/<%= user['_id'] %>">Full channel logs</a><br>
-        <a href="https://www.twitch.tv/<%= user['display_name'] %>" target="_blank"><%= user['display_name'] %>'s logs</a>
+        <a href="/logs/<%= user['_id'] %>">Full channel logs</a><br>
+        <a href="https://www.twitch.tv/<%= user['display_name'] %>" target="_blank"><%= user['display_name'] %>'s Twitch channel</a>
       </p>
     </section>
   </article>
@@ -36,7 +36,7 @@
           <% } %>
         <% } %>
       </p>
-      <p><a href="/logs/<%= channels[c].userId %>/<%= logs[e].userId %>">Check full streamer logs</a></p>
+      <p><a href="/logs/<%= channels[c].userId %>/<%= logs[e].userId %>">Check full logs</a></p>
     </article>
     <hr>
   <% } %>

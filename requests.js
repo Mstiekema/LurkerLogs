@@ -20,11 +20,15 @@ exports.getChannelNames = function(data, attr, finished) {
   getIdArray(data, attr, function(userIds) {
     var channels = userIds.join("&id=");
     Request("GET", "https://api.twitch.tv/helix/users?id="+channels, function(e, d) {
-      var res = new Array();
-      for (var i = 0; i < d.data.length; i++) {
-        res.push({userId: d.data[i]["id"], username: d.data[i]["display_name"]})
+      if (d.data) {
+        var res = new Array();
+        for (var i = 0; i < d.data.length; i++) {
+          res.push({userId: d.data[i]["id"], username: d.data[i]["display_name"]})
+        }
+        finished(e, res);
+      } else {
+        finished(e, []);
       }
-      finished(e, res);
     });
   });
 }

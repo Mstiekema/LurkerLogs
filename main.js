@@ -34,7 +34,7 @@ bot.on("chat", function (channel, userInfo, message, self) {
   // Create log message on new message sent
   var logMessage = {
     userId: userInfo["user-id"],
-    // username: userInfo["display-name"], // Add username, so we can track if the user changes their username
+    username: userInfo["display-name"], // We can track if the user changes their username by recording the current display name
     streamerId: userInfo["room-id"],
     log: message, // Emoji's aren't yet parsed, so they show up as question marks
     isSub: userInfo["subscriber"],
