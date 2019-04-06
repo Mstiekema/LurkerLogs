@@ -1,19 +1,19 @@
 <% include header.ejs %>
 <% if (logs[0]) { %>
   <article id="userHeader">
-    <section id="userHeaderInfo">
+    <section class="headers" id="userHeaderInfo">
       <h2><%= user['display_name'] %></h2>
       <h3><%= user['bio'] %></h3>
-      <img src="<%= user['logo'] %>"/>
+      <img id="profileImg" src="<%= user['logo'] %>"/>
     </section>
-    <section>
+    <section class="headers" id="userHeaderStats">
       <h2>Statistics</h2>
       <p>
         Active in <b><%= channels.length %></b> channels <br>
         <!-- Has had <b>X</b> usernames: X, X, X <br> -->
         <!-- Sent <b><%= logs.length %></b> messages with an average of <b><%= logs.length / channels.length %></b> messages per streamer <br> This doesn;t work anymore, will fix this soon -->
     </section>
-    <section>
+    <section class="headers" id="userHeaderActions">
       <h2>Actions</h2>
       <p>
         <a href="/logs/<%= user['_id'] %>">Full channel logs</a><br>
