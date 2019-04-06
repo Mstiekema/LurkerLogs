@@ -61,6 +61,10 @@ main {
   margin: 0 auto;
 }
 
+.smallH {
+  margin-bottom: -10px;
+}
+
 #userHeader {
   display: flex;
 }

@@ -18,21 +18,15 @@ app.get("/", function (req, res) {
 });
 
 app.get("/logs/:channel", function (req, res) {
-	db.query("SELECT * FROM chatlogs WHERE streamerId = ?", req.params.channel, function (err, result) {
-		rq.getChannelNames(result, "userId", function(err, channels) {
-			mergeArrays(result, channels, "userId", function(rslt) {
-				res.render("logs.html", {logs: result, channels: channels});
-			});
-		});
+	loadLogs(req, "SELECT * FROM chatlogs WHERE streamerId = ?", [req.params.channel], function(user, logs, channels) {
+		res.render("logs.html", {user: user, logs: logs, channels: channels, streamer: null, date: req.query.date});
 	});
 });
 
 app.get("/logs/:channel/:user", function (req, res) {
-	db.query("SELECT * FROM chatlogs WHERE streamerId = '" + req.params.channel + "' AND userId = '" + req.params.user + "'", function (err, result) {
-		rq.getChannelNames(result, "userId", function(err, channels) {
-			mergeArrays(result, channels, "userId", function(rslt) {
-				res.render("logs.html", {logs: result, channels: channels});
-			});
+	loadLogs(req, "SELECT * FROM chatlogs WHERE streamerId = ? AND userId = ?", [req.params.channel, req.params.user], function(user, logs, channels) {
+		rq.getChannelNames([{streamerId: req.params.channel}], "streamerId", function(err, streamer) {
+			res.render("logs.html", {user: user, logs: logs, channels: channels, streamer: streamer[0], date: req.query.date});
 		});
 	});
 });
@@ -51,6 +45,23 @@ app.get("/user/:channel", function (req, res) {
 		}
 	});
 });
+
+function loadLogs(req, sql, params, next) {
+	let user = params[params.length - 1];
+	if (req.query.date) {
+		sql += " AND CAST(date AS DATE) = ?";
+		params.push(req.query.date);
+	}
+	rq.getUserInfo(user, function(err, res) {
+		db.query(sql, params, function (err, result) {
+			rq.getChannelNames(result, "userId", function(err, channels) {
+				mergeArrays(result, channels, "userId", function(rslt) {
+					next(res, result, rslt);
+				});
+			});
+		});
+	});
+}
 
 function mergeArrays(arr1, arr2, attr, finished) {
 	for (var i in arr1) {

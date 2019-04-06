@@ -11,7 +11,7 @@
       <p>
         Active in <b><%= channels.length %></b> channels <br>
         <!-- Has had <b>X</b> usernames: X, X, X <br> -->
-        Sent <b><%= logs.length %></b> messages with an average of <b><%= logs.length / channels.length %></b> messages per streamer <br> <!-- This doesn;t work anymore, will fix this soon -->
+        <!-- Sent <b><%= logs.length %></b> messages with an average of <b><%= logs.length / channels.length %></b> messages per streamer <br> This doesn;t work anymore, will fix this soon -->
     </section>
     <section>
       <h2>Actions</h2>
@@ -39,7 +39,7 @@
     </article>
     <hr>
   <% } %>
-  <% include footer.ejs %>
 <% } else { %>
   <h1>Couldn't find a user with this username. Please try again.</h1>
 <% } %>
+<% include footer.ejs %>
