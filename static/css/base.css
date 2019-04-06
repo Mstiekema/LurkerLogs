@@ -10,6 +10,15 @@ body {
   margin: 0;
 }
 
+header {
+  height: 500px;
+  text-align: center;
+  color: #f1fffa;
+  display: table-cell;
+  width: 100vw;
+  vertical-align: middle;
+}
+
 nav {
   display: flex;
   justify-content: flex-end;
@@ -52,6 +61,16 @@ a:hover {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.subSection {
+  margin: 2px auto;
+  margin-bottom: 20px;
+  padding: 10px 20px 20px 20px;
+  background-color: #555555;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 30%;
+  min-height: 400px;
+}
+
 .left {
   float: left;
 }
@@ -89,12 +108,21 @@ a:hover {
   background-color: #212121;
 }
 
+#frontPage {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 #userHeader {
   display: flex;
 }
 
 #userHeaderInfo {
   text-align: center;
+}
+
+#infoSection {
+  width: 70%;
 }
 
 @media only screen and (max-width: 1050px) {

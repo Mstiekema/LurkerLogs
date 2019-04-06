@@ -1,4 +1,46 @@
 <% include header.ejs %>
-<h1>Hey there!</h1>
-<h3>Welcome to LurkerLogs</h3>
+<header>
+  <h1>LurkerLogs</h1>
+  <p>Get more insight into your chat stats and viewers!</p>
+</header>
+<article id="frontPage">
+  <section class="subSection">
+    <h2>Live recorded channels</h2>
+    <% if (live) { %>
+
+    <% } else { %>
+      <p>None of the recorded channels are currently live.</p>
+    <% } %>
+  </section>
+  <section class="subSection">
+    <h2>Offline recorded channels</h2>
+    <% if (offline) { %>
+
+    <% } else { %>
+      <p>None of the recorded channels are currently offline.</p>
+    <% } %>
+  </section>
+  <section class="subSection">
+    <h2>Want your stream stats?</h2>
+    <p>
+      Do you want LurkerLogs in your channel? It's pretty easy to do so if you follow these steps.
+    </p>
+    <p>
+      LurkerLogs is currently in development, so for now it's not yet possible to add this bot to your channel :/
+    <!-- <ol>
+      <li>Go to the <a href="https://www.twitch.tv/LurkerLogs" target="_blank">LurkerLogs Twitch channel</a></li>
+      <li>Type "!join 'channel'" in the chat (you can only do this as broadcaster or mod for the given channel)</li>
+      <li>???</li>
+      <li>Enjoy the amazing experience of having LurkerLogs</li>
+    </ol> -->
+  </section>
+  <section class="subSection" id="infoSection">
+    <h2>What does LurkerLogs do?</h2>
+    <p>
+      LurkerLogs is a bot that lurks in your channel and records your viewers chat messages.<br>
+      On this website, you can view these and compare them to other streamers and get some insight in how they behave across the platform.
+      Besides logging users, we also keep track of viewer watch time and other statistics for viewers to enjoy.
+    </p>
+  </section>
+</article>
 <% include footer.ejs %>

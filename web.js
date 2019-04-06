@@ -14,7 +14,7 @@ app.set("view engine", "ejs");
 module.exports = app;
 
 app.get("/", function (req, res) {
-	res.render("index.html");
+	res.render("index.html", {live: null, offline: null});
 });
 
 app.get("/logs/:channel", function (req, res) {
