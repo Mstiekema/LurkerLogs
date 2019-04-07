@@ -7,7 +7,11 @@
   <section class="subSection">
     <h2>Live recorded channels</h2>
     <% if (live) { %>
-
+        <ul>
+          <% for (var e in live) { %>
+            <li><a href="https://www.twitch.tv/<%= live[e].name %>" target="_blank"><%= live[e].name %></a> is currently live with <%= live[e].viewers %> viewers.<br><%= live[e].title %></li>
+          <% } %>
+        </ul>
     <% } else { %>
       <p>None of the recorded channels are currently live.</p>
     <% } %>
@@ -15,7 +19,11 @@
   <section class="subSection">
     <h2>Offline recorded channels</h2>
     <% if (offline) { %>
-
+        <ul>
+          <% for (var e in offline) { %>
+            <li><a href="https://www.twitch.tv/<%= offline[e].channelname %>" target="_blank"><%= offline[e].channelname %></a></li>
+          <% } %>
+        </ul>
     <% } else { %>
       <p>None of the recorded channels are currently offline.</p>
     <% } %>

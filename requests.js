@@ -15,6 +15,33 @@ exports.getUserInfo = function(userId, finished) {
   });
 }
 
+// Check whether the given channels are live or not
+exports.getChannelStatus = function(userIds, finished) {
+  let channels = userIds.map(e => e["userId"]);
+  var ids = channels.join("&user_id=");
+  Request("GET", "https://api.twitch.tv/helix/streams?user_id="+ids, function(e, b) {
+    var live = new Array();
+    var offline = new Array();
+    console.log("https://api.twitch.tv/helix/streams?user_id="+ids)
+    console.log(b.data)
+    if (b.data) {
+      let liveChannels = b.data.map(e => e["user_id"]);
+      for (var x in userIds) {
+        if (liveChannels.includes(userIds[x].userId)) {
+          var liveUser = b.data.find(obj => obj["user_id"] === userIds[x].userId)
+          live.push({id: userIds[x].userId, name: liveUser["user_name"], title: liveUser["title"], viewers: liveUser["viewer_count"]});
+        } else {
+          offline.push(userIds[x])
+        }
+      }
+    } else {
+      offline = userIds;
+      live = null;
+    }
+    finished(live, offline);
+  });
+}
+
 // Request usernames of array with streamers
 exports.getChannelNames = function(data, attr, finished) {
   getIdArray(data, attr, function(userIds) {

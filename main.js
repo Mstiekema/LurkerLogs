@@ -4,9 +4,7 @@ var req = require("./requests.js");
 var db = require("./database.js");
 var web = require("./web.js");
 var tmi = require("tmi.js");
-
 var bot = new tmi.client(options.twitch);
-var channels = ["#lurkerlogs", "#merijn"]; // Test channels, pull all channels from database in future commit
 
 // Start website
 web.listen(3030, function() { console.log("LurkerLogs website is now online!"); });
@@ -16,11 +14,13 @@ req.getSubBadge("51068984", function (err, res) { console.log(res); });
 
 // Connect the bot to Twitch
 bot.connect().then(function(data) {
-  for (var i = 0; i < channels.length; i++) {
-    bot.join(channels[i]).then(function(data) {
-      bot.say(data[0], "LurkerLogs connected MrDestructoid");
-    }).catch(function(err) { console.log(err) });
-  }
+  db.query("SELECT * FROM channels", function (err, channels) {
+    for (var i = 0; i < channels.length; i++) {
+      bot.join("#" + channels[i].channelname).then(function(data) {
+        console.log("LurkerLogs connected to " + data[0]);
+      }).catch(function(err) { console.log(err) });
+    }
+  });
 }).catch(function(err) { console.log(err); });
 
 // Detect chat message

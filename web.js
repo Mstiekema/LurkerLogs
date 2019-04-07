@@ -14,7 +14,11 @@ app.set("view engine", "ejs");
 module.exports = app;
 
 app.get("/", function (req, res) {
-	res.render("index.html", {live: null, offline: null});
+	db.query("SELECT * FROM channels", function (err, channels) {
+		rq.getChannelStatus(channels, function(live, offline) {
+			res.render("index.html", {live: live, offline: offline});
+		});
+	});
 });
 
 app.get("/logs/:channel", function (req, res) {
