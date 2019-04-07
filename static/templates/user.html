@@ -3,20 +3,21 @@
   <article id="userHeader">
     <section class="headers" id="userHeaderInfo">
       <h2><%= user['display_name'] %></h2>
-      <h3><%= user['bio'] %></h3>
-      <img id="profileImg" src="<%= user['logo'] %>"/>
+      <h3><%= user['description'] %></h3>
+      <img id="profileImg" src="<%= user['profile_image_url'] %>"/>
     </section>
     <section class="headers" id="userHeaderStats">
       <h2>Statistics</h2>
       <p>
-        Active in <b><%= channels.length %></b> channels <br>
+        Twitch page views: <b><%= user["view_count"] %></b><br>
+        Active in <b><%= channels.length %></b> recorded channels<br>
         <!-- Has had <b>X</b> usernames: X, X, X <br> -->
         <!-- Sent <b><%= logs.length %></b> messages with an average of <b><%= logs.length / channels.length %></b> messages per streamer <br> This doesn;t work anymore, will fix this soon -->
     </section>
     <section class="headers" id="userHeaderActions">
       <h2>Actions</h2>
       <p>
-        <a href="/logs/<%= user['_id'] %>">Full channel logs</a><br>
+        <a href="/logs/<%= user['id'] %>">Full channel logs</a><br>
         <a href="https://www.twitch.tv/<%= user['display_name'] %>" target="_blank"><%= user['display_name'] %>'s Twitch channel</a>
       </p>
     </section>

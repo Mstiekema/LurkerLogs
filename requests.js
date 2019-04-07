@@ -10,9 +10,24 @@ exports.getSubBadge = function(userId, finished) {
 
 // Request the information of a Twitch user
 exports.getUserInfo = function(userId, finished) {
-  Request("GET", "https://api.twitch.tv/kraken/users/"+userId, function(e, b) {
-    finished(e, b);
-  });
+  console.log(userId)
+  if (isNaN(userId)) {
+    Request("GET", "https://api.twitch.tv/helix/users?login="+userId, function(e, b) {
+      if (b.data) {
+        finished(e, b.data[0]);
+      } else {
+        finished(e, null);
+      }
+    });
+  } else {
+      Request("GET", "https://api.twitch.tv/helix/users?id="+userId, function(e, b) {
+      if (b.data) {
+        finished(e, b.data[0]);
+        } else {
+        finished(e, null);
+      }
+    });
+  }
 }
 
 // Check whether the given channels are live or not

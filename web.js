@@ -36,16 +36,20 @@ app.get("/logs/:channel/:user", function (req, res) {
 });
 
 app.get("/user/:channel", function (req, res) {
-	db.query(`SET @rank = 0, @current = NULL`, null); // Set these variables so the next query works
-	db.query(`SELECT userId, streamerId, date, log, displayName, isSub, isMod FROM (SELECT userId, streamerId, date, log, displayName, isSub, isMod, @rank := IF(@current = streamerId, @rank + 1, 1) AS rank, (@current := streamerId) FROM chatlogs WHERE displayName = '`+ req.params.channel + `' OR userId = '`+ req.params.channel + `' ORDER BY streamerId, date DESC) ranked WHERE rank <= 10`, function (err, result) {
-		if (result && result[0]) {
-			rq.getUserInfo(result[0].userId, function(err, rslt) {
-				rq.getChannelNames(result, "streamerId", function(err, channels) {
-					res.render("user.html", {logs: result, channels: channels, user: rslt});
-				});
+	rq.getUserInfo(req.params.channel, function(err, user) {
+		if (user) {
+			db.query(`SET @rank = 0, @current = NULL`, null); // Set these variables so the next query works
+			db.query(`SELECT userId, streamerId, date, log, displayName, isSub, isMod FROM (SELECT userId, streamerId, date, log, displayName, isSub, isMod, @rank := IF(@current = streamerId, @rank + 1, 1) AS rank, (@current := streamerId) FROM chatlogs WHERE displayName = '`+ req.params.channel + `' OR userId = '`+ req.params.channel + `' ORDER BY streamerId, date DESC) ranked WHERE rank <= 10`, function (err, result) {
+				if (result && result[0]) {
+					rq.getChannelNames(result, "streamerId", function(err, channels) {
+						res.render("user.html", {logs: result, channels: channels, user: user});
+					});
+				} else {
+					res.render("user.html", {logs: null, channels: null, user: user});
+				}
 			});
 		} else {
-			res.render("user.html", {logs: [], channels: [], user: []});
+			res.render("user.html", {logs: null, channels: null, user: null});
 		}
 	});
 });
@@ -56,7 +60,20 @@ function loadLogs(req, sql, params, next) {
 		sql += " AND CAST(date AS DATE) = ?";
 		params.push(req.query.date);
 	}
+	if (params[1] != req.query.date) {
+		rq.getUserInfo(params[1], function(err, res) {
+			params[1] = res["id"];
+			getLogs(user, sql, params, next);
+		});
+	} else {
+		getLogs(user, sql, params, next);
+	}
+}
+
+function getLogs(user, sql, params, next) {
 	rq.getUserInfo(user, function(err, res) {
+		console.log(params)
+		params[0] = res["id"]; // Set to userId if it was a login name
 		db.query(sql, params, function (err, result) {
 			rq.getChannelNames(result, "userId", function(err, channels) {
 				mergeArrays(result, channels, "userId", function(rslt) {

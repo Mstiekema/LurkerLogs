@@ -1,5 +1,5 @@
 <% include header.ejs %>
-  <% if(user && user['_id']) { %>
+  <% if(user && user['id']) { %>
     <h1 class="smallH"><%= user["display_name"] %></h1>
     <p>
       <% if (date) { %>Showing logs from <%= date %><br><% } %>
