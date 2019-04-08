@@ -1,5 +1,5 @@
 <% include header.ejs %>
-<% if (logs[0]) { %>
+<% if (user) { %>
   <article id="userHeader">
     <section class="headers" id="userHeaderInfo">
       <h2><%= user['display_name'] %></h2>
@@ -10,9 +10,7 @@
       <h2>Statistics</h2>
       <p>
         Twitch page views: <b><%= user["view_count"] %></b><br>
-        Active in <b><%= channels.length %></b> recorded channels<br>
-        <!-- Has had <b>X</b> usernames: X, X, X <br> -->
-        <!-- Sent <b><%= logs.length %></b> messages with an average of <b><%= logs.length / channels.length %></b> messages per streamer <br> This doesn;t work anymore, will fix this soon -->
+        <% if (channels) { %>Active in <b><%= channels.length %></b> recorded channels<br><% } %>
     </section>
     <section class="headers" id="userHeaderActions">
       <h2>Actions</h2>
@@ -23,22 +21,26 @@
     </section>
   </article>
   <hr>
-  <% for (var c in channels) { %>
-    <article>
-      <h1><%= channels[c].username %></h1>
-      <p>
-        <% for (var e in logs) { %>
-          <% if (logs[e].streamerId == channels[c].userId) { %>
-            <% if (logs[e].isMod && channels[c].username == user['display_name']) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1" alt="Icon for Twitch broadcaster">
-            <% } else if (logs[e].isMod) { %> <img src="https://static-cdn.jtvnw.net/chat-badges/mod.png" alt="Icon for Twitch subscriber"> <% } %>
-            <% if (logs[e].isSub) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-8513-2ff4adfae661/1" alt="Icon for Twitch moderator"> <% } %>
-            <i class="fa fa-clock-o" title="<%= logs[e].date %>"></i> | <%= user['display_name'] %>: <%= logs[e].log %> <br>
+  <% if (logs && logs[0]) { %>
+    <% for (var c in channels) { %>
+      <article>
+        <h1><%= channels[c].username %></h1>
+        <p>
+          <% for (var e in logs) { %>
+            <% if (logs[e].streamerId == channels[c].userId) { %>
+              <% if (logs[e].isMod && channels[c].username == user['display_name']) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1" alt="Icon for Twitch broadcaster">
+              <% } else if (logs[e].isMod) { %> <img src="https://static-cdn.jtvnw.net/chat-badges/mod.png" alt="Icon for Twitch subscriber"> <% } %>
+              <% if (logs[e].isSub) { %> <img src="https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-8513-2ff4adfae661/1" alt="Icon for Twitch moderator"> <% } %>
+              <i class="fa fa-clock-o" title="<%= logs[e].date %>"></i> | <%= user['display_name'] %>: <%= logs[e].log %> <br>
+            <% } %>
           <% } %>
-        <% } %>
-      </p>
-      <p><a href="/logs/<%= channels[c].userId %>/<%= logs[e].userId %>">Check full logs</a></p>
-    </article>
-    <hr>
+        </p>
+        <p><a href="/logs/<%= channels[c].userId %>/<%= logs[e].userId %>">Check full logs</a></p>
+      </article>
+      <hr>
+    <% } %>
+  <% } else { %>
+      <h3>User has no recorded chat messages</h3>
   <% } %>
 <% } else { %>
   <h1>Couldn't find a user with this username. Please try again.</h1>
