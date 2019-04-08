@@ -75,6 +75,19 @@ exports.getChannelNames = function(data, attr, finished) {
   });
 }
 
+// Get the current chatters in a stream
+exports.getChatters = function(streamer, finished) {
+  streamer = streamer.toLowerCase();
+  req({method: "GET", url: "http://tmi.twitch.tv/group/user/" + streamer + "/chatters"}, function (error, response, body) {
+    console.log(error)
+    console.log(response)
+    console.log(body)
+    if (error) { return finished(error, null) }
+    body = JSON.parse(body);
+    finished(error, body);
+  });
+}
+
 // Create array of IDs
 function getIdArray(data, attr, finished) {
   var channels = new Array();
@@ -97,7 +110,7 @@ function checkIfContains(array, value) {
 // Default request
 function Request(type, url, finished) {
   req({method: type, headers: {'content-type': 'application/json', 'Accept': 'application/vnd.twitchtv.v5+json', 'Client-ID': conf.twitchApi.clientId}, url: url}, function (error, response, body) {
-    if (error) { return finished({error: error}) }
+    if (error) { return finished(error, null) }
     body = JSON.parse(body);
     finished(error, body);
   });

@@ -28,6 +28,43 @@ bot.on("chat", function (channel, userInfo, message, self) {
   if (self) return; // Ignore own messages sent
   var isMod;
 
+  if (channel == "#lurkerlogs") {
+    let parsedMsg = message.split(" ");
+    if (parsedMsg[0] == "!join" && parsedMsg[1]) {
+      console.log("User wants LurkerLogs to join a channel")
+      var toJoin = parsedMsg[1];
+      channel.replace("#", "");
+      if (toJoin == channel) {
+        addChannelToBot(toJoin, function(err) {
+          if (err) {
+            bot.say(channel, "Something went wrong when adding LurkerLogs to " + toJoin + ". Please try again later.");
+          } else {
+            bot.say(channel, "Succesfully added LurkerLogs to " + toJoin + "! MrDestructoid");
+          }
+        });
+      } else {
+        req.getChatters(toJoin, function(err, users) {
+          if (err) {
+            bot.say(channel, "LurkerLogs couldn't be added to " + toJoin + ". Please try again later.");
+          } else {
+            console.log(users)
+            if (users.chatters.moderators.includes(userInfo["username"])) {
+              addChannelToBot(toJoin, function(err) {
+                if (err) {
+                  bot.say(channel, "Something went wrong when adding LurkerLogs to " + toJoin + ". Please try again later.");
+                } else {
+                  bot.say(channel, "Succesfully added LurkerLogs to " + toJoin + "! MrDestructoid");
+                }
+              });
+            } else {
+              bot.say(channel, "You have to be in the chat of " + toJoin + " as a moderator to add LurkerLogs here. Try again later.");
+            }
+          }
+        })
+      }
+    }
+  }
+
   // Set mod to true if the user is a mod or the broadcaster
   if (userInfo["mod"] || (userInfo["badges"] && userInfo["badges"]["broadcaster"])) {isMod = true} else {isMod = false}
 
@@ -49,3 +86,18 @@ bot.on("chat", function (channel, userInfo, message, self) {
   // Add message to the database
   db.query("INSERT INTO chatlogs SET ?", logMessage, function (err, result) { if (err) { console.log(err); } });
 });
+
+function addChannelToBot(user, finished) {
+  req.getUserInfo(user, function(err, user) {
+    db.query("INSERT INTO channels SET ?", {userId: user["id"], channelname: user["login"]}, function(err, res) {
+      if (err) {
+        finished(err);
+      } else {
+        bot.join("#" + user["login"]).then(function(data) {
+          console.log("LurkerLogs connected to " + data[0]);
+        }).catch(function(err) { console.log(err) });
+        finished(err);
+      }
+    })
+  });
+}
