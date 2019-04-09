@@ -32,9 +32,8 @@ bot.on("chat", function (channel, userInfo, message, self) {
     let parsedMsg = message.split(" ");
     if (parsedMsg[0] == "!join" && parsedMsg[1]) {
       console.log("User wants LurkerLogs to join a channel")
-      var toJoin = parsedMsg[1];
-      channel.replace("#", "");
-      if (toJoin == channel) {
+      var toJoin = parsedMsg[1].toLowerCase();
+      if (toJoin == userInfo["username"]) {
         addChannelToBot(toJoin, function(err) {
           if (err) {
             bot.say(channel, "Something went wrong when adding LurkerLogs to " + toJoin + ". Please try again later.");
@@ -47,7 +46,6 @@ bot.on("chat", function (channel, userInfo, message, self) {
           if (err) {
             bot.say(channel, "LurkerLogs couldn't be added to " + toJoin + ". Please try again later.");
           } else {
-            console.log(users)
             if (users.chatters.moderators.includes(userInfo["username"])) {
               addChannelToBot(toJoin, function(err) {
                 if (err) {
@@ -57,7 +55,7 @@ bot.on("chat", function (channel, userInfo, message, self) {
                 }
               });
             } else {
-              bot.say(channel, "You have to be in the chat of " + toJoin + " as a moderator to add LurkerLogs here. Try again later.");
+              bot.say(channel, "You have to be in the chat of " + toJoin + " as a moderator to add LurkerLogs there. Try again later.");
             }
           }
         })

@@ -6,7 +6,7 @@
 <article id="frontPage">
   <section class="subSection">
     <h2>Live recorded channels</h2>
-    <% if (live) { %>
+    <% if (live && live[0]) { %>
         <ul>
           <% for (var e in live) { %>
             <li><a href="https://www.twitch.tv/<%= live[e].name %>" target="_blank"><%= live[e].name %></a> is currently live with <%= live[e].viewers %> viewers.<br><%= live[e].title %></li>
@@ -18,7 +18,7 @@
   </section>
   <section class="subSection">
     <h2>Offline recorded channels</h2>
-    <% if (offline) { %>
+    <% if (offline && offline[0]) { %>
         <ul>
           <% for (var e in offline) { %>
             <li><a href="https://www.twitch.tv/<%= offline[e].channelname %>" target="_blank"><%= offline[e].channelname %></a></li>

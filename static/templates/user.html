@@ -15,7 +15,7 @@
     <section class="headers" id="userHeaderActions">
       <h2>Actions</h2>
       <p>
-        <a href="/logs/<%= user['id'] %>">Full channel logs</a><br>
+        <a href="/logs/<%= user['id'] %>?date=<% var d = new Date(); %><%= d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate() %>">Check channel logs</a><br>
         <a href="https://www.twitch.tv/<%= user['display_name'] %>" target="_blank"><%= user['display_name'] %>'s Twitch channel</a>
       </p>
     </section>

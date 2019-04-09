@@ -60,6 +60,7 @@ function loadLogs(req, sql, params, next) {
 		sql += " AND CAST(date AS DATE) = ?";
 		params.push(req.query.date);
 	}
+	sql += " LIMIT 500"
 	if (params[1] != req.query.date) {
 		rq.getUserInfo(params[1], function(err, res) {
 			params[1] = res["id"];
@@ -72,7 +73,6 @@ function loadLogs(req, sql, params, next) {
 
 function getLogs(user, sql, params, next) {
 	rq.getUserInfo(user, function(err, res) {
-		console.log(params)
 		params[0] = res["id"]; // Set to userId if it was a login name
 		db.query(sql, params, function (err, result) {
 			rq.getChannelNames(result, "userId", function(err, channels) {

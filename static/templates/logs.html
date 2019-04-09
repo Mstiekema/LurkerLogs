@@ -16,7 +16,7 @@
       or <button id="allLogs">Check all logs</button>
     </p>
     <p>
-      <a href="/user/<%= user['_id'] %>"><button>User page</button></a>
+      <a href="/user/<%= user['id'] %>"><button>User page</button></a>
       <a href="https://www.twitch.tv/<%= user['name'] %>" target="_blank"><button>Twitch page <i class="fa fa-external-link"></i></button></a>
     </p>
     <hr>
@@ -28,7 +28,7 @@
             <% } else if (logs[e].isMod) { %> <img class="icon" src="https://static-cdn.jtvnw.net/chat-badges/mod.png" alt="Icon for Twitch subscriber"> <% } %>
             <% if (logs[e].isSub) { %> <img class="icon" src="https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-8513-2ff4adfae661/1" alt="Icon for Twitch moderator"> <% } %>
             <i class="fa fa-clock-o clockDate icon" title="<%= logs[e].date %>"></i> <span class="rawDate"><%= logs[e].date.toLocaleString() %></span>
-            <%= logs[e].username %>: <%= logs[e].log %>
+            <%= logs[e].displayName %>: <%= logs[e].log %>
           </section>
         <% } %>
       </article>

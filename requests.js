@@ -10,7 +10,6 @@ exports.getSubBadge = function(userId, finished) {
 
 // Request the information of a Twitch user
 exports.getUserInfo = function(userId, finished) {
-  console.log(userId)
   if (isNaN(userId)) {
     Request("GET", "https://api.twitch.tv/helix/users?login="+userId, function(e, b) {
       if (b.data) {
@@ -37,8 +36,6 @@ exports.getChannelStatus = function(userIds, finished) {
   Request("GET", "https://api.twitch.tv/helix/streams?user_id="+ids, function(e, b) {
     var live = new Array();
     var offline = new Array();
-    console.log("https://api.twitch.tv/helix/streams?user_id="+ids)
-    console.log(b.data)
     if (b.data) {
       let liveChannels = b.data.map(e => e["user_id"]);
       for (var x in userIds) {
@@ -79,9 +76,6 @@ exports.getChannelNames = function(data, attr, finished) {
 exports.getChatters = function(streamer, finished) {
   streamer = streamer.toLowerCase();
   req({method: "GET", url: "http://tmi.twitch.tv/group/user/" + streamer + "/chatters"}, function (error, response, body) {
-    console.log(error)
-    console.log(response)
-    console.log(body)
     if (error) { return finished(error, null) }
     body = JSON.parse(body);
     finished(error, body);

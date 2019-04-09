@@ -125,6 +125,12 @@ a:hover {
   width: 70%;
 }
 
+@media only screen and (max-width: 1300px) {
+  .subSection {
+    width: 70%;
+  }
+}
+
 @media only screen and (max-width: 1050px) {
   #profileImg {
     width: 100%;
