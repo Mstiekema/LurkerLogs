@@ -1,4 +1,4 @@
-var conf = require("./config.js");
+var conf = require("../config.js");
 var req = require("request");
 
 // Request the badges from a streamer
@@ -59,6 +59,7 @@ exports.getChannelNames = function(data, attr, finished) {
   getIdArray(data, attr, function(userIds) {
     var channels = userIds.join("&id=");
     Request("GET", "https://api.twitch.tv/helix/users?id="+channels, function(e, d) {
+      console.log(d)
       if (d.data) {
         var res = new Array();
         for (var i = 0; i < d.data.length; i++) {
@@ -66,9 +67,24 @@ exports.getChannelNames = function(data, attr, finished) {
         }
         finished(e, res);
       } else {
-        finished(e, []);
+        finished(e, new Array());
       }
     });
+  });
+}
+
+exports.getUserIds = function(usernames, finished) {
+  var channels = usernames.join("&login=");
+  Request("GET", "https://api.twitch.tv/helix/users?login="+channels, function(e, d) {
+    if (d.data) {
+      var res = new Array();
+      for (var i = 0; i < d.data.length; i++) {
+        res.push(parseInt(d.data[i]["id"]));
+      }
+      finished(e, res);
+    } else {
+      finished(e, new Array());
+    }
   });
 }
 
@@ -83,7 +99,7 @@ exports.getChatters = function(streamer, finished) {
 }
 
 // Create array of IDs
-function getIdArray(data, attr, finished) {
+exports.getIdArray = function(data, attr, finished) {
   var channels = new Array();
   for (var i = 0; i < data.length; i++) {
     if (checkIfContains(channels, data[i][attr]) == -1) { channels.push(data[i][attr]); }

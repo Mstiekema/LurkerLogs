@@ -1,8 +1,9 @@
 // Default variables
+var watch = require("./modules/watchtime.js")
+var req = require("./modules/requests.js");
+var db = require("./modules/database.js");
+var web = require("./modules/web.js");
 var options = require("./config.js");
-var req = require("./requests.js");
-var db = require("./database.js");
-var web = require("./web.js");
 var tmi = require("tmi.js");
 var bot = new tmi.client(options.twitch);
 
@@ -84,6 +85,20 @@ bot.on("chat", function (channel, userInfo, message, self) {
   // Add message to the database
   db.query("INSERT INTO chatlogs SET ?", logMessage, function (err, result) { if (err) { console.log(err); } });
 });
+
+// Update watchtime for users
+setInterval(function() {
+  db.query("SELECT * FROM channels", function (err, channels) {
+    req.getChannelStatus(channels, function(live, offline) {
+      for (var i = 0; i < live.length; i++) {
+        watch.updateWatchTime(live[i].name, live[i].id, true);
+      }
+      for (var i = 0; i < offline.length; i++) {
+        watch.updateWatchTime(offline[i].channelname, offline[i].userId, false);
+      }
+    });
+  });
+}, 600 * 1000);
 
 function addChannelToBot(user, finished) {
   req.getUserInfo(user, function(err, user) {
