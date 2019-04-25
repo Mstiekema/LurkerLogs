@@ -5,11 +5,11 @@ var db = require("./database.js");
 var express = require("express");
 var app = express();
 
-app.use(express.static("../static"));
+app.use(express.static("./static"));
 app.use(bodyParser.json());
 app.use(session({secret: "lolxdhaha", resave: false, saveUninitialized: true, cookie: { secure: false }}));
 app.engine("html", require("ejs").renderFile);
-app.set("views", "../static/templates");
+app.set("views", "./static/templates");
 app.set("view engine", "ejs");
 module.exports = app;
 
@@ -28,9 +28,11 @@ app.get("/logs/:channel", function (req, res) {
 });
 
 app.get("/logs/:channel/:user", function (req, res) {
-	loadLogs(req, "SELECT * FROM chatlogs WHERE streamerId = ? AND userId = ?", [req.params.channel, req.params.user], function(user, logs, channels) {
+	loadLogs(req, "SELECT * FROM chatlogs WHERE userId = ? AND streamerId = ?", [req.params.user, req.params.channel], function(user, logs, channels, timeInfo) {
+		console.log(timeInfo)
 		rq.getChannelNames([{streamerId: req.params.channel}], "streamerId", function(err, streamer) {
-			res.render("logs.html", {user: user, logs: logs, channels: channels, streamer: streamer[0], date: req.query.date});
+			if (!streamer[0]) { streamerName = req.params.channel } else { streamerName = streamer[0].username }
+			res.render("logs.html", {user: user, logs: logs, channels: channels, streamer: streamerName, date: req.query.date, timeInfo: timeInfo});
 		});
 	});
 });
@@ -55,7 +57,6 @@ app.get("/user/:channel", function (req, res) {
 });
 
 function loadLogs(req, sql, params, next) {
-	let user = params[params.length - 1];
 	if (req.query.date) {
 		sql += " AND CAST(date AS DATE) = ?";
 		params.push(req.query.date);
@@ -64,20 +65,31 @@ function loadLogs(req, sql, params, next) {
 	if (params[1] != req.query.date) {
 		rq.getUserInfo(params[1], function(err, res) {
 			params[1] = res["id"];
-			getLogs(user, sql, params, next);
+			getLogs(sql, params, true, next);
 		});
 	} else {
-		getLogs(user, sql, params, next);
+		getLogs(sql, params, false, next);
 	}
 }
 
-function getLogs(user, sql, params, next) {
-	rq.getUserInfo(user, function(err, res) {
+function getLogs(sql, params, getTime, next) {
+	rq.getUserInfo(params[0], function(err, res) {
 		params[0] = res["id"]; // Set to userId if it was a login name
 		db.query(sql, params, function (err, result) {
 			rq.getChannelNames(result, "userId", function(err, channels) {
 				mergeArrays(result, channels, "userId", function(rslt) {
-					next(res, result, rslt);
+					if (getTime) {
+						db.query("SELECT * FROM users WHERE userId = ? AND streamerId = ?", [params[0], params[1]], function (err, timeInfo) {
+							timeInfo = timeInfo[0];
+							if (timeInfo) {
+								timeInfo.online = parseTime(timeInfo.online)
+								timeInfo.offline = parseTime(timeInfo.offline)
+							}
+							next(res, result, rslt, timeInfo);
+						});
+					} else {
+						next(res, result, rslt, null);
+					}
 				});
 			});
 		});
@@ -93,4 +105,13 @@ function mergeArrays(arr1, arr2, attr, finished) {
 		}
 	}
 	finished(arr1);
+}
+
+// Parse minutes into days, hours & minutes
+function parseTime(t) {
+  var days = Math.floor(t / 24 / 60);
+  var hours = Math.floor(t / 60 % 24);
+  var minutes = Math.floor(t % 60);
+  var timeString = (days > 0 ? days + " days, " : "") + (hours > 0 ? hours + " hours, " + (minutes < 10 ? "0" : "") : "") + minutes + " minutes"
+  return timeString;
 }

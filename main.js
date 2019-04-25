@@ -87,6 +87,7 @@ bot.on("chat", function (channel, userInfo, message, self) {
 });
 
 // Update watchtime for users
+// Compatible for streamers with <100 viewers
 setInterval(function() {
   db.query("SELECT * FROM channels", function (err, channels) {
     req.getChannelStatus(channels, function(live, offline) {

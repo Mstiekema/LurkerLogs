@@ -1,24 +1,41 @@
 <% include header.ejs %>
   <% if(user && user['id']) { %>
     <h1 class="smallH"><%= user["display_name"] %></h1>
-    <p>
-      <% if (date) { %>Showing logs from <%= date %><br><% } %>
-      <% if (streamer) { %><%= user["display_name"] %>'s logs from <%= streamer.username %>'s channel<% } %>
-    </p>
+    <article>
+      <section>
+        <p>
+          <% if (date) { %>Showing logs from <%= date %><br><% } %>
+          <% if (streamer) { %><%= user["display_name"] %>'s logs from <%= streamer %>'s channel<% } %>
+        </p>
+      </section>
+      <section>
+        <p>
+          <% if (timeInfo && streamer) { %>
+            <%= user["display_name"] %> has watched <%= streamer %> for <b><%= timeInfo.online %></b> whilst streaming and spent <b><%= timeInfo.offline %></b> lurking in offline chat.
+          <% } %>
+        </p>
+      </section>
+    </article>
     <hr>
-    <h2 class="smallH">Options</h2>
-    <p>
-      <label for="dateAsClock">Display date & time as clock</label>
-      <input type="checkbox" id="dateAsClock" name="dateAsClock" checked><br>
+    <article>
+      <h2 class="smallH">Options</h2>
+      <section>
+        <p>
+          <label for="dateAsClock">Display date & time as clock</label>
+          <input type="checkbox" id="dateAsClock" name="dateAsClock" checked><br>
 
-      <label for="selectDate">Select date</label>
-      <input type="date" id="selectDate" name="selectDate">
-      or <button id="allLogs">Check all logs</button>
-    </p>
-    <p>
-      <a href="/user/<%= user['id'] %>"><button>User page</button></a>
-      <a href="https://www.twitch.tv/<%= user['name'] %>" target="_blank"><button>Twitch page <i class="fa fa-external-link"></i></button></a>
-    </p>
+          <label for="selectDate">Select date</label>
+          <input type="date" id="selectDate" name="selectDate">
+          or <button id="allLogs">Check all logs</button>
+        </p>
+      </section>
+      <section>
+        <p>
+          <a href="/user/<%= user['id'] %>"><button>User page</button></a>
+          <a href="https://www.twitch.tv/<%= user['name'] %>" target="_blank"><button>Twitch page <i class="fa fa-external-link"></i></button></a>
+        </p>
+      </section>
+    </article>
     <hr>
     <% if (logs[0]) { %>
       <article>

@@ -56,7 +56,7 @@ exports.getChannelStatus = function(userIds, finished) {
 
 // Request usernames of array with streamers
 exports.getChannelNames = function(data, attr, finished) {
-  getIdArray(data, attr, function(userIds) {
+  exports.getIdArray(data, attr, function(userIds) {
     var channels = userIds.join("&id=");
     Request("GET", "https://api.twitch.tv/helix/users?id="+channels, function(e, d) {
       console.log(d)
