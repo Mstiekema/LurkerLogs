@@ -11,28 +11,39 @@ exports.updateWatchTime = function(channel, chanId, live) {
     var global_mods = users.chatters.global_mods
     var usernames = viewers.concat(moderators, vips, staff, admins, global_mods)
 
-    // console.log(usernames);
-    req.getUserIds(usernames, function(err, allUsers) {
-      db.query("SELECT userId FROM users where streamerId = ?", chanId, function(err, res) {
-        req.getIdArray(res, "userId", function(userIds) {
-          let user = {userId: "", streamerId: chanId, online: 0, offline: 0}
-          if (userIds[0]) {
-            for (var i = 0; i < allUsers.length; i++) {
-              if (userIds.indexOf(allUsers[i]) != -1) {
-                user.userId = allUsers[i];
-                updateUser(user, live);
-              } else {
-                user.userId = allUsers[i];
-                insertUser(user, live);
-              }
-            }
-          } else {
-            for (var i = 0; i < allUsers.length; i++) {
+    // if (usernames.length > 100) {
+    //   for (var i = 0, i < Math.floor(usernames.length / 100)), i++) {
+    //     var j = i + 1;
+    //     var usernamesBig = usernames.splice(i * 100, j * 100);
+    //     updateAllUsers(usernamesBig);
+    //   }
+    // } else {
+      updateAllUsers(usernames);
+    // }
+  });
+}
+
+function updateAllUsers(usernames) {
+  req.getUserIds(usernames, function(err, allUsers) {
+    db.query("SELECT userId FROM users where streamerId = ?", chanId, function(err, res) {
+      req.getIdArray(res, "userId", function(userIds) {
+        let user = {userId: "", streamerId: chanId, online: 0, offline: 0}
+        if (userIds[0]) {
+          for (var i = 0; i < allUsers.length; i++) {
+            if (userIds.indexOf(allUsers[i]) != -1) {
+              user.userId = allUsers[i];
+              updateUser(user, live);
+            } else {
               user.userId = allUsers[i];
               insertUser(user, live);
             }
           }
-        });
+        } else {
+          for (var i = 0; i < allUsers.length; i++) {
+            user.userId = allUsers[i];
+            insertUser(user, live);
+          }
+        }
       });
     });
   });
