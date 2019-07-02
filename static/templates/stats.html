@@ -1,0 +1,72 @@
+<% include header.ejs %>
+<h1 class="statsH">Chat stats - <%= user %></h1>
+
+<article id="statsPage">
+  <article class="stats">
+    <section>
+      <h2 class="statsH">Twitch emotes</h2>
+    </section>
+    <section>
+      <% for (var i = 0; i < 25; i++) { %>
+      <section class="statRow"><%= i + 1 %>. Kappa</section>
+      <% } %>
+    </section>
+  </article>
+
+  <article class="stats">
+    <section>
+      <h2 class="statsH">BTTV emotes</h2>
+    </section>
+    <section>
+      <% for (var i = 0; i < 25; i++) { %>
+      <section class="statRow"><%= i + 1 %>. Kappa</section>
+      <% } %>
+    </section>
+  </article>
+
+  <article class="stats">
+    <section>
+      <h2 class="statsH">FFZ emotes</h2>
+    </section>
+    <section>
+      <% for (var i = 0; i < 25; i++) { %>
+      <section class="statRow"><%= i + 1 %>. Kappa</section>
+      <% } %>
+    </section>
+  </article>
+
+  <article class="stats">
+    <section>
+      <h2 class="statsH">Chatters</h2>
+    </section>
+    <section>
+      <% for (var i = 0; i < 25; i++) { %>
+      <section class="statRow"><%= i + 1 %>. Kappa</section>
+      <% } %>
+    </section>
+  </article>
+
+  <article class="stats">
+    <section>
+      <h2 class="statsH">Online viewers</h2>
+    </section>
+    <section>
+      <% for (var i = 0; i < 25; i++) { %>
+      <section class="statRow"><%= i + 1 %>. Kappa</section>
+      <% } %>
+    </section>
+  </article>
+
+  <article class="stats">
+    <section>
+      <h2 class="statsH">Offline viewers</h2>
+    </section>
+    <section>
+      <% for (var i = 0; i < 25; i++) { %>
+      <section class="statRow"><%= i + 1 %>. Kappa</section>
+      <% } %>
+    </section>
+  </article>
+</article>
+
+<% include footer.ejs %>

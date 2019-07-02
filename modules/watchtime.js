@@ -18,7 +18,7 @@ exports.updateWatchTime = function(channel, chanId, live) {
     //     updateAllUsers(usernamesBig);
     //   }
     // } else {
-      updateAllUsers(usernames);
+    updateAllUsers(usernames);
     // }
   });
 }
@@ -27,7 +27,7 @@ function updateAllUsers(usernames) {
   req.getUserIds(usernames, function(err, allUsers) {
     db.query("SELECT userId FROM users where streamerId = ?", chanId, function(err, res) {
       req.getIdArray(res, "userId", function(userIds) {
-        let user = {userId: "", streamerId: chanId, online: 0, offline: 0}
+        let user = { userId: "", streamerId: chanId, online: 0, offline: 0 }
         if (userIds[0]) {
           for (var i = 0; i < allUsers.length; i++) {
             if (userIds.indexOf(allUsers[i]) != -1) {

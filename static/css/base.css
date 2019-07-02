@@ -108,6 +108,33 @@ a:hover {
   background-color: #212121;
 }
 
+.stats {
+  width: calc(33% - 90px);
+  height: 500px;
+  float: left;
+  margin: 0px 20px 50px 20px;
+  background-color: #414141;
+  overflow-y: scroll;
+}
+
+.statsH {
+  text-align: center;
+}
+
+.statRow {
+  width: calc(100% - 20px);
+  padding: 10px;
+}
+
+.statRow:nth-child(odd) { 
+  background-color: #333333;
+}
+
+#statsPage {
+  width: 90%;
+  margin: 0 auto;
+}
+
 #frontPage {
   display: flex;
   flex-wrap: wrap;
